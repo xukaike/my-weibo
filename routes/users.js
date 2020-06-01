@@ -1,13 +1,31 @@
-const router = require('koa-router')()
+const router = require('koa-joi-router')
+const Joi = router.Joi
+const user = router()
+const ctl = require('../controllers/user')
 
-router.prefix('/users')
+user.prefix('/api/user')
 
-router.get('/', function (ctx, next) {
-  ctx.body = 'this is a users response!'
+// user.route({
+//   method: 'post',
+//   path: '/register',
+//   validate: {
+//     body: {
+
+//     }
+//   },
+//   ctl: ctl.register// todo
+// })
+
+user.route({
+  method: 'post',
+  path: '/isExist',
+  validate: {
+    body: {
+      userName: Joi.string().required()
+    },
+    type: 'json'
+  },
+  handler: ctl.isExist// todo
 })
 
-router.get('/bar', function (ctx, next) {
-  ctx.body = 'this is a users/bar response'
-})
-
-module.exports = router
+module.exports = user
