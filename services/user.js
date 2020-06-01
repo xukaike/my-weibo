@@ -1,5 +1,6 @@
 const { userModel } = require('../model/index')
 const { formatUsers } = require('../utils/formatUser')
+const md5 = require('../utils/cryp')
 
 /**
  *获取用户信息
@@ -14,6 +15,21 @@ async function getUserInfo (userName, password) {
   }
 }
 
+/**
+ *创建用户
+ * @param {Object} userinfo
+ */
+async function createUser ({ userName, password, gender, nickName }) {
+  const res = await userModel.create({
+    user_name: userName,
+    password: md5(password),
+    gender,
+    nick_name: nickName
+  })
+  return { id: res.insertId }
+}
+
 module.exports = {
-  getUserInfo
+  getUserInfo,
+  createUser
 }

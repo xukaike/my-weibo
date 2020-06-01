@@ -1,3 +1,9 @@
+/*
+ * @Author: xukai
+ * @Date: 2020-06-01 16:03:59
+ * @Last Modified by:   xukai
+ * @Last Modified time: 2020-06-01 16:03:59
+ */
 const BaseController = require('./baseController')
 const service = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
@@ -8,6 +14,7 @@ class UserCtl extends BaseController {
     super()
     this.name = 'UserCtl'
     this.isExist = this.isExist.bind(this)
+    this.register = this.register.bind(this)
   }
 
   /**
@@ -19,18 +26,41 @@ class UserCtl extends BaseController {
       const { userName } = ctx.request.body
       const userInfo = await service.getUserInfo(userName)
       if (!userInfo) {
-        const res = new ErrorModel(errnoInfo.registerUserNameNotExistInfo)
-        ctx.body = res
+        ctx.body = new ErrorModel(errnoInfo.registerUserNameNotExistInfo)
       } else {
-        ctx.body = new SuccessModel(userInfo)
+        ctx.body = new SuccessModel({
+          id: userInfo.id,
+          userName: userInfo.userName
+        })
       }
     } catch (e) {
       this.errorHandler(e)
     }
   }
 
+  /**
+   * 注册
+   * @param {Object} ctx
+   */
   async register (ctx) {
-
+    try {
+      const { userName, password, gender } = ctx.request.body
+      const userInfo = await service.getUserInfo(userName)
+      if (userInfo) {
+        ctx.body = new ErrorModel(errnoInfo.registerUserNameExistInfo)
+      } else {
+        const res = await service.createUser({
+          userName,
+          password,
+          gender,
+          nickName: userName
+        })
+        return new SuccessModel(res)
+      }
+    } catch (e) {
+      this.errorHandler(e)
+      ctx.body = new ErrorModel(errnoInfo.registerFailInfo)
+    }
   }
 }
 
