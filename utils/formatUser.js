@@ -1,10 +1,15 @@
+/*
+ * @Author: xukai
+ * @Date: 2020-06-01 16:52:19
+ * @Last Modified by: xukai
+ * @Last Modified time: 2020-06-01 16:52:45
+ */
 
-const config = require('config')
-const deafultAvatar = config.deafultAvatar
+const { defaultAvatar } = require('../config/constant')
 
 function _formatUserAvatar (obj) {
   if (!obj.avatar) {
-    obj.picture = deafultAvatar
+    obj.avatar = defaultAvatar
   }
   return obj
 }

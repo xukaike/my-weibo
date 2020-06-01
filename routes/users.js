@@ -5,17 +5,6 @@ const ctl = require('../controllers/user')
 
 user.prefix('/api/user')
 
-// user.route({
-//   method: 'post',
-//   path: '/register',
-//   validate: {
-//     body: {
-
-//     }
-//   },
-//   ctl: ctl.register// todo
-// })
-
 user.route({
   method: 'post',
   path: '/isExist',
@@ -25,7 +14,7 @@ user.route({
     },
     type: 'json'
   },
-  handler: ctl.isExist// todo
+  handler: ctl.isExist
 })
 
 user.route({
@@ -40,6 +29,19 @@ user.route({
     type: 'json'
   },
   handler: ctl.register
+})
+
+user.route({
+  method: 'post',
+  path: '/login',
+  validate: {
+    body: {
+      userName: Joi.string().required(),
+      password: Joi.string().required()
+    },
+    type: 'json'
+  },
+  handler: ctl.login
 })
 
 module.exports = user

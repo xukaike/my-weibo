@@ -1,8 +1,8 @@
 /*
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
- * @Last Modified by:   xukai
- * @Last Modified time: 2020-06-01 16:03:59
+ * @Last Modified by: xukai
+ * @Last Modified time: 2020-06-01 17:18:05
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -15,6 +15,7 @@ class UserCtl extends BaseController {
     this.name = 'UserCtl'
     this.isExist = this.isExist.bind(this)
     this.register = this.register.bind(this)
+    this.login = this.login.bind(this)
   }
 
   /**
@@ -28,10 +29,7 @@ class UserCtl extends BaseController {
       if (!userInfo) {
         ctx.body = new ErrorModel(errnoInfo.registerUserNameNotExistInfo)
       } else {
-        ctx.body = new SuccessModel({
-          id: userInfo.id,
-          userName: userInfo.userName
-        })
+        ctx.body = new SuccessModel()
       }
     } catch (e) {
       this.errorHandler(e)
@@ -56,6 +54,26 @@ class UserCtl extends BaseController {
           nickName: userName
         })
         return new SuccessModel(res)
+      }
+    } catch (e) {
+      this.errorHandler(e)
+      ctx.body = new ErrorModel(errnoInfo.registerFailInfo)
+    }
+  }
+
+  /**
+   * 登陆
+   * @param {Object} ctx
+   */
+  async login (ctx) {
+    try {
+      const { userName, password } = ctx.request.body
+      const userInfo = await service.getUserInfo(userName, password)
+      if (!userInfo) {
+        ctx.body = new ErrorModel(errnoInfo.loginFailInfo)
+      } else {
+        if (!ctx.session.userInfo) ctx.session.userInfo = userInfo
+        ctx.body = new SuccessModel()
       }
     } catch (e) {
       this.errorHandler(e)

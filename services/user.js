@@ -8,11 +8,14 @@ const md5 = require('../utils/cryp')
  * @param {string} password
  */
 async function getUserInfo (userName, password) {
-  if (!password) {
-    const [res] = await userModel.getByName(userName)
-    const user = formatUsers(res)
-    return user
+  let res
+  if (password) {
+    [res] = await userModel.getByName(userName, md5(password))
+  } else {
+    [res] = await userModel.getByName(userName)
   }
+  const user = formatUsers(res)
+  return user
 }
 
 /**
