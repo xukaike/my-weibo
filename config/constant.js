@@ -72,5 +72,6 @@ module.exports = {
       message: '删除微博失败，请重试'
     }
   },
-  CRYPTO_SECRET_KEY: 'Shbg_u2n98zK'
+  CRYPTO_SECRET_KEY: 'Shbg_u2n98zK',
+  SESSION_SECRET_KEY: 'uhng7$aon_'
 }

@@ -6,10 +6,15 @@ const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
 const path = require('path')
+const session = require('koa-generic-session')
+const redisStore = require('koa-redis')
 
 const index = require('./routes/index')
 const user = require('./routes/users')
 const userView = require('./routes/view/user')
+
+const { REDIS_CONF } = require('config')
+const { SESSION_SECRET_KEY } = require('./config/constant')
 
 // error handler
 onerror(app)
@@ -24,6 +29,20 @@ app.use(require('koa-static')(path.join(__dirname, 'public')))
 
 app.use(views(path.join(__dirname, 'views'), {
   extension: 'ejs'
+}))
+
+app.keys = [SESSION_SECRET_KEY]
+app.use(session({
+  key: 'weibo.sid',
+  prefix: 'weibo:sess:',
+  cookie: {
+    path: '/',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000
+  },
+  store: redisStore({
+    all: `${REDIS_CONF.host}:${REDIS_CONF.port}`
+  })
 }))
 
 // logger
