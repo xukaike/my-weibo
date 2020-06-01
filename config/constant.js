@@ -71,5 +71,6 @@ module.exports = {
       errno: 11002,
       message: '删除微博失败，请重试'
     }
-  }
+  },
+  CRYPTO_SECRET_KEY: 'Shbg_u2n98zK'
 }
