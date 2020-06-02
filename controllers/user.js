@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-01 17:18:05
+ * @Last Modified time: 2020-06-01 18:14:34
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -53,7 +53,7 @@ class UserCtl extends BaseController {
           gender,
           nickName: userName
         })
-        return new SuccessModel(res)
+        ctx.body = new SuccessModel(res)
       }
     } catch (e) {
       this.errorHandler(e)
