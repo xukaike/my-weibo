@@ -12,6 +12,7 @@ const redisStore = require('koa-redis')
 const user = require('./routes/users')
 const userView = require('./routes/view/user')
 const blogView = require('./routes/view/blog')
+const errorView = require('./routes/view/error')
 
 const { REDIS_CONF } = require('config')
 const { SESSION_SECRET_KEY } = require('./config/constant')
@@ -57,6 +58,7 @@ app.use(async (ctx, next) => {
 app.use(user.middleware())
 app.use(userView.middleware())
 app.use(blogView.middleware())
+app.use(errorView.middleware())
 
 // error-handling
 app.on('error', (err, ctx) => {
