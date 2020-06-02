@@ -72,4 +72,10 @@ user.route({
   handler: [loginCheck, ctl.changePassword]
 })
 
+user.route({
+  method: 'post',
+  path: '/logout',
+  handler: [loginCheck, ctl.logout]
+})
+
 module.exports = user
