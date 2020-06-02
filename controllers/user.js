@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 14:14:59
+ * @Last Modified time: 2020-06-02 16:26:40
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
