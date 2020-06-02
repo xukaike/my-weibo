@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 13:53:49
+ * @Last Modified time: 2020-06-02 14:11:58
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -93,11 +93,30 @@ class UserCtl extends BaseController {
       const res = await service.changeInfo({ userName, nickName, city, avatar })
       if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
       else {
-        ctx.bdoy = new ErrorModel(errnoInfo.changeInfoFailInfo)
+        ctx.body = new ErrorModel(errnoInfo.changeInfoFailInfo)
       }
     } catch (e) {
       this.errorHandler(e)
-      ctx.bdoy = new ErrorModel(errnoInfo.changeInfoFailInfo)
+      ctx.body = new ErrorModel(errnoInfo.changeInfoFailInfo)
+    }
+  }
+
+  /**
+   * 修改密码
+   * @param {Object} ctx
+   */
+  async changePassword (ctx) {
+    try {
+      const { password, newPassword } = ctx.request.body
+      const userName = ctx.session.userInfo.user_name
+      const res = await service.changePassword({ userName, password, newPassword })
+      if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
+      else {
+        ctx.body = new ErrorModel(errnoInfo.changePasswordFailInfo)
+      }
+    } catch (e) {
+      this.errorHandler(e)
+      ctx.body = new ErrorModel(errnoInfo.changePasswordFailInfo)
     }
   }
 }

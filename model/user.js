@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 13:49:26
+ * @Last Modified time: 2020-06-02 14:08:15
  */
 const { query } = require('./db')
 
@@ -33,6 +33,16 @@ class UserModel {
     } = data
     const sql = `UPDATE ${this.userTable} SET nick_name = ?,avatar = ?,city = ? WHERE user_name = ?`
     return query(sql, [nickName, avatar, city, userName])
+  }
+
+  changePassword (data) {
+    const {
+      userName,
+      password,
+      newPassword
+    } = data
+    const sql = `UPDATE ${this.userTable} SET password = ? WHERE user_name = ? AND password = ?`
+    return query(sql, [newPassword, userName, password])
   }
 }
 

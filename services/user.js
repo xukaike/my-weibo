@@ -33,7 +33,7 @@ async function createUser ({ userName, password, gender, nickName }) {
 }
 
 /**
- *创建用户
+ *修改信息
  * @param {Object} userinfo
  */
 async function changeInfo ({ userName, nickName, city, avatar }) {
@@ -44,8 +44,20 @@ async function changeInfo ({ userName, nickName, city, avatar }) {
   return res.affectedRows
 }
 
+/**
+ *修改密码
+ * @param {Object} userinfo
+ */
+async function changePassword ({ userName, password, newPassword }) {
+  const res = await userModel.changePassword({
+    userName, password: md5(password), newPassword: md5(newPassword)
+  })
+  return res.affectedRows
+}
+
 module.exports = {
   getUserInfo,
   createUser,
-  changeInfo
+  changeInfo,
+  changePassword
 }

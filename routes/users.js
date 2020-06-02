@@ -59,4 +59,17 @@ user.route({
   handler: [loginCheck, ctl.changeInfo]
 })
 
+user.route({
+  method: 'patch',
+  path: '/changePassword',
+  validate: {
+    body: {
+      password: Joi.string(),
+      newPassword: Joi.string()
+    },
+    type: 'json'
+  },
+  handler: [loginCheck, ctl.changePassword]
+})
+
 module.exports = user
