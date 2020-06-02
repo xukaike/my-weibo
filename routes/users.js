@@ -2,6 +2,7 @@ const router = require('koa-joi-router')
 const Joi = router.Joi
 const user = router()
 const ctl = require('../controllers/user')
+const { loginCheck } = require('../middleware/loginCheck')
 
 user.prefix('/api/user')
 
@@ -42,6 +43,20 @@ user.route({
     type: 'json'
   },
   handler: ctl.login
+})
+
+user.route({
+  method: 'patch',
+  path: '/changeInfo',
+  validate: {
+    body: {
+      nickName: Joi.string().allow(null, ''),
+      city: Joi.string().allow(null, ''),
+      picture: Joi.string().allow(null, '')
+    },
+    type: 'json'
+  },
+  handler: [loginCheck, ctl.changeInfo]
 })
 
 module.exports = user

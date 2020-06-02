@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-01 16:38:14
+ * @Last Modified time: 2020-06-02 13:49:26
  */
 const { query } = require('./db')
 
@@ -22,6 +22,17 @@ class UserModel {
   create (data) {
     const sql = `INSERT INTO ${this.userTable} SET ?`
     return query(sql, data)
+  }
+
+  update (data) {
+    const {
+      userName,
+      nickName,
+      avatar,
+      city
+    } = data
+    const sql = `UPDATE ${this.userTable} SET nick_name = ?,avatar = ?,city = ? WHERE user_name = ?`
+    return query(sql, [nickName, avatar, city, userName])
   }
 }
 

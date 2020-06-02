@@ -32,7 +32,20 @@ async function createUser ({ userName, password, gender, nickName }) {
   return { id: res.insertId }
 }
 
+/**
+ *创建用户
+ * @param {Object} userinfo
+ */
+async function changeInfo ({ userName, nickName, city, avatar }) {
+  if (!nickName) nickName = userName
+  const res = await userModel.update({
+    userName, nickName, city, avatar
+  })
+  return res.affectedRows
+}
+
 module.exports = {
   getUserInfo,
-  createUser
+  createUser,
+  changeInfo
 }

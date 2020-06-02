@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-01 18:14:34
+ * @Last Modified time: 2020-06-02 13:53:49
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -16,6 +16,7 @@ class UserCtl extends BaseController {
     this.isExist = this.isExist.bind(this)
     this.register = this.register.bind(this)
     this.login = this.login.bind(this)
+    this.changeInfo = this.changeInfo.bind(this)
   }
 
   /**
@@ -78,6 +79,25 @@ class UserCtl extends BaseController {
     } catch (e) {
       this.errorHandler(e)
       ctx.body = new ErrorModel(errnoInfo.registerFailInfo)
+    }
+  }
+
+  /**
+   * 修改信息
+   * @param {Object} ctx
+   */
+  async changeInfo (ctx) {
+    try {
+      const userName = ctx.session.userInfo.user_name
+      const { nickName, city, picture: avatar } = ctx.request.body
+      const res = await service.changeInfo({ userName, nickName, city, avatar })
+      if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
+      else {
+        ctx.bdoy = new ErrorModel(errnoInfo.changeInfoFailInfo)
+      }
+    } catch (e) {
+      this.errorHandler(e)
+      ctx.bdoy = new ErrorModel(errnoInfo.changeInfoFailInfo)
     }
   }
 }
