@@ -13,6 +13,7 @@ const user = require('./routes/users')
 const userView = require('./routes/view/user')
 const blogView = require('./routes/view/blog')
 const errorView = require('./routes/view/error')
+const utils = require('./routes/utils')
 
 const { REDIS_CONF } = require('config')
 const { SESSION_SECRET_KEY } = require('./config/constant')
@@ -59,6 +60,7 @@ app.use(user.middleware())
 app.use(userView.middleware())
 app.use(blogView.middleware())
 app.use(errorView.middleware())
+app.use(utils.middleware())
 
 // error-handling
 app.on('error', (err, ctx) => {
