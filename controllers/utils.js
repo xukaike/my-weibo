@@ -2,11 +2,11 @@
  * @Author: xukai
  * @Date: 2020-06-02 10:34:37
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 10:45:04
+ * @Last Modified time: 2020-06-02 11:26:46
  */
 
 const { ErrorModel, SuccessModel } = require('../model/ResModel')
-const { uploadFileSizeFailInfo } = require('../model/ErrorInfo')
+const { uploadFileSizeFailInfo } = require('../config/constant').errnoInfo
 const fse = require('fs-extra')
 const path = require('path')
 
@@ -28,15 +28,15 @@ fse.pathExists(DIST_FOLDER_PATH).then(exist => {
  * @param {number} size 文件体积大小
  * @param {string} path 文件路径
  */
-async function saveFile ({ name, type, size, path }) {
+async function saveFile ({ name, type, size, filePath }) {
   if (size > MAX_SIZE) {
-    await fse.remove(path)
+    await fse.remove(filePath)
     return new ErrorModel(uploadFileSizeFailInfo)
   }
 
-  const fileName = name + '_' + Date.now()
+  const fileName = Date.now() + '_' + name
   const distFilePath = path.join(DIST_FOLDER_PATH, fileName)
-  await fse.move(path, distFilePath)
+  await fse.move(filePath, distFilePath)
 
   return new SuccessModel({
     url: '/' + fileName

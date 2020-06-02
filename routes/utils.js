@@ -7,12 +7,12 @@ utils.prefix('/api/utils')
 
 utils.route({
   method: 'post',
-  path: 'upload',
+  path: '/upload',
   handler: [loginCheck, koaForm(), async (ctx, next) => {
     const file = ctx.req.files.file
     if (!file) return
     const { path, name, size, type } = file
-    ctx.body = await saveFile(path, name, size, type)
+    ctx.body = await saveFile({ filePath: path, name, size, type })
   }]
 })
 

@@ -11,7 +11,6 @@ const redisStore = require('koa-redis')
 
 const user = require('./routes/users')
 const userView = require('./routes/view/user')
-const blogView = require('./routes/view/blog')
 const errorView = require('./routes/view/error')
 const utils = require('./routes/utils')
 
@@ -28,6 +27,7 @@ app.use(bodyparser({
 app.use(json())
 app.use(logger())
 app.use(require('koa-static')(path.join(__dirname, 'public')))
+app.use(require('koa-static')(path.join(__dirname, 'uploadFiles')))
 
 app.use(views(path.join(__dirname, 'views'), {
   extension: 'ejs'
@@ -58,9 +58,9 @@ app.use(async (ctx, next) => {
 // routes
 app.use(user.middleware())
 app.use(userView.middleware())
-app.use(blogView.middleware())
-app.use(errorView.middleware())
 app.use(utils.middleware())
+
+app.use(errorView.middleware())
 
 // error-handling
 app.on('error', (err, ctx) => {

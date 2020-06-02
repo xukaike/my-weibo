@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-02 10:00:51
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 10:07:08
+ * @Last Modified time: 2020-06-02 10:55:07
  */
 
 const { ErrorModel } = require('../model/resModel')
@@ -16,6 +16,7 @@ const { loginCheckFailInfo } = require('../config/constant').errnoInfo
 async function loginCheck (ctx, next) {
   if (ctx.session && ctx.session.userInfo) {
     await next()
+    return
   }
   ctx.body = new ErrorModel(loginCheckFailInfo)
 }
@@ -23,6 +24,7 @@ async function loginCheck (ctx, next) {
 async function loginRedirect (ctx, next) {
   if (ctx.session && ctx.session.userInfo) {
     await next()
+    return
   }
   const curUrl = ctx.url
   ctx.redirect('/login?url=' + encodeURIComponent(curUrl))
