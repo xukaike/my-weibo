@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-03 15:49:41
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 16:35:50
+ * @Last Modified time: 2020-06-03 17:16:26
  */
 
 const BaseController = require('../controllers/baseController')
@@ -15,6 +15,9 @@ class UserRelation extends BaseController {
     super()
     this.name = 'UserRelation'
     this.follow = this.follow.bind(this)
+    this.unFollow = this.unFollow.bind(this)
+    this.getFans = this.getFans.bind(this)
+    this.getFollowers = this.getFollowers.bind(this)
   }
 
   async follow (ctx) {
@@ -47,6 +50,22 @@ class UserRelation extends BaseController {
       this.errorHandler(e)
       ctx.body = new ErrorModel(errnoInfo.deleteFollowerFailInfo)
     }
+  }
+
+  async getFans (userId) {
+    const { count, userList } = await service.getFollowersByUser(userId)
+    return new SuccessModel({
+      count,
+      userList
+    })
+  }
+
+  async getFollowers (followerId) {
+    const { count, userList } = await service.getUsersByFollower(followerId)
+    return new SuccessModel({
+      count,
+      userList
+    })
   }
 }
 
