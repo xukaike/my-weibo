@@ -9,14 +9,8 @@ const path = require('path')
 const session = require('koa-generic-session')
 const redisStore = require('koa-redis')
 
-const user = require('./routes/users')
-const userView = require('./routes/view/user')
+const routes = require('./middleware/routes')
 const errorView = require('./routes/view/error')
-const utils = require('./routes/utils')
-const blogView = require('./routes/view/blog')
-const blog = require('./routes/blog')
-const profile = require('./routes/blog-profile')
-const square = require('./routes/blog-square')
 
 const { REDIS_CONF } = require('config')
 const { SESSION_SECRET_KEY } = require('./config/constant')
@@ -60,13 +54,7 @@ app.use(async (ctx, next) => {
 })
 
 // routes
-app.use(user.middleware())
-app.use(userView.middleware())
-app.use(utils.middleware())
-app.use(blogView.middleware())
-app.use(blog.middleware())
-app.use(profile.middleware())
-app.use(square.middleware())
+routes(app)
 
 app.use(errorView.middleware())
 
