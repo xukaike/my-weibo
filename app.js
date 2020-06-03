@@ -16,6 +16,7 @@ const utils = require('./routes/utils')
 const blogView = require('./routes/view/blog')
 const blog = require('./routes/blog')
 const profile = require('./routes/blog-profile')
+const square = require('./routes/blog-square')
 
 const { REDIS_CONF } = require('config')
 const { SESSION_SECRET_KEY } = require('./config/constant')
@@ -65,6 +66,7 @@ app.use(utils.middleware())
 app.use(blogView.middleware())
 app.use(blog.middleware())
 app.use(profile.middleware())
+app.use(square.middleware())
 
 app.use(errorView.middleware())
 

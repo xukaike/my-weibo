@@ -76,5 +76,7 @@ module.exports = {
   SESSION_SECRET_KEY: 'uhng7$aon_',
   PAGE_SIZE: 5,
   // 正则表达式，匹配 '@昵称 - userName'
-  REG_AT: /@(.+?)\s-\s(\w+?)\b/g
+  REG_AT: /@(.+?)\s-\s(\w+?)\b/g,
+  SQUARE_KEY_PREFIX: 'weibo:square:',
+  SQUARE_CACHE_TIMEOUT: 60// 秒
 }

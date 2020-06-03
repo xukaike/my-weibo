@@ -54,4 +54,19 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   })
 })
 
+// 广场
+router.get('/square', loginRedirect, async (ctx, next) => {
+  const result = await blogCtl.getSquareBlogList(0)
+  const { isEmpty, blogList, pageSize, pageIndex, count } = result.data || {}
+  await ctx.render('square', {
+    blogData: {
+      isEmpty,
+      blogList,
+      pageSize,
+      pageIndex,
+      count
+    }
+  })
+})
+
 module.exports = router
