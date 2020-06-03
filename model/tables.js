@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 11:09:54
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 16:07:56
+ * @Last Modified time: 2020-06-03 16:16:25
  */
 'use strict'
 
@@ -18,6 +18,8 @@ const user = `CREATE TABLE IF NOT EXISTS user(
   avatar VARCHAR(255) COMMENT '头像',
   craeted_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  KEY (user_name),
+  KEY (password),
   PRIMARY KEY (id)
 )`
 
@@ -28,6 +30,7 @@ const blog = `CREATE TABLE IF NOT EXISTS blog(
   image VARCHAR(255) COMMENT '图片',
   created_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  KEY (user_id),
   PRIMARY KEY(id)
 )`
 
@@ -37,6 +40,8 @@ const userRelation = `CREATE TABLE IF NOT EXISTS user_relation(
   follower_id INT UNSIGNED NOT NULL COMMENT '关注者id',
   created_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  KEY (user_id),
+  KEY (follower_id),
   PRIMARY KEY(id)
 )`
 
