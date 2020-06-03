@@ -2,12 +2,13 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 17:06:47
+ * @Last Modified time: 2020-06-03 18:39:29
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { errnoInfo } = require('../config/constant')
+const { addFollwer } = require('../services/userRelation')
 
 class UserCtl extends BaseController {
   constructor () {
@@ -54,6 +55,7 @@ class UserCtl extends BaseController {
           gender,
           nickName: userName
         })
+        await addFollwer({ userId: res.id, followerId: res.id })
         ctx.body = new SuccessModel(res)
       }
     } catch (e) {

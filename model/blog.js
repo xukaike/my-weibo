@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 18:24:31
+ * @Last Modified time: 2020-06-03 18:48:45
  */
 const { query } = require('./db')
 
@@ -53,20 +53,20 @@ class BlogModel {
     let sql = ''
     if (count) {
       sql = `SELECT COUNT(${this.blogTable}.id)
-      FROM ${this.userRelationTable} 
-      LEFT JOIN ${this.userTable} 
-      ON ${this.userRelationTable}.user_id = ${this.userTable}.id 
-      LEFT JOIN ${this.blogTable}
+      FROM ${this.blogTable} 
+      LEFT JOIN ${this.userRelationTable} 
+      ON ${this.blogTable}.user_id = ${this.userRelationTable}.user_id 
+      LEFT JOIN ${this.userTable}
       ON ${this.userTable}.id = ${this.blogTable}.user_id 
       WHERE ${this.userRelationTable}.follower_id = ?`
 
       return query(sql, userId)
     } else {
       sql = `SELECT ${this.blogTable}.id,${this.blogTable}.content, ${this.blogTable}.image, ${this.blogTable}.created_at,${this.blogTable}.updated_at,${this.userTable}.user_name,${this.userTable}.nick_name,${this.userTable}.avatar  
-      FROM ${this.userRelationTable} 
-      LEFT JOIN ${this.userTable} 
-      ON ${this.userRelationTable}.user_id = ${this.userTable}.id 
-      LEFT JOIN ${this.blogTable}
+      FROM ${this.blogTable} 
+      LEFT JOIN ${this.userRelationTable} 
+      ON ${this.blogTable}.user_id = ${this.userRelationTable}.user_id 
+      LEFT JOIN ${this.userTable}
       ON ${this.userTable}.id = ${this.blogTable}.user_id 
       WHERE ${this.userRelationTable}.follower_id = ?
       ORDER BY ${this.blogTable}.id DESC

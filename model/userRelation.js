@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 17:45:56
+ * @Last Modified time: 2020-06-03 18:52:20
  */
 const { query } = require('./db')
 
@@ -27,16 +27,18 @@ class UserRelation {
     const sql = `SELECT ${this.userTable}.id, ${this.userTable}.user_name, ${this.userTable}.nick_name, ${this.userTable}.avatar, ${this.userTable}.city, ${this.userTable}.gender
     FROM ${this.userRelationTable} LEFT JOIN ${this.userTable}
     ON ${this.userRelationTable}.follower_id = ${this.userTable}.id
-    WHERE ${this.userRelationTable}.user_id = ?`
-    return query(sql, userId)
+    WHERE ${this.userRelationTable}.user_id = ?
+    AND ${this.userTable}.id != ?`
+    return query(sql, [userId, userId])
   }
 
   getUsersByFollower (followerId) {
     const sql = `SELECT ${this.userTable}.id, ${this.userTable}.user_name, ${this.userTable}.nick_name, ${this.userTable}.avatar, ${this.userTable}.city, ${this.userTable}.gender
     FROM ${this.userRelationTable} LEFT JOIN ${this.userTable}
     ON ${this.userRelationTable}.user_id = ${this.userTable}.id
-    WHERE ${this.userRelationTable}.follower_id = ?`
-    return query(sql, followerId)
+    WHERE ${this.userRelationTable}.follower_id = ?
+    AND ${this.userTable}.id != ?`
+    return query(sql, [followerId, followerId])
   }
 }
 
