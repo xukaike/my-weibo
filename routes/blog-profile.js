@@ -30,4 +30,16 @@ profile.route({
   handler: [loginCheck, userRelationCtl.follow]
 })
 
+profile.route({
+  method: 'post',
+  path: '/unFollow',
+  validate: {
+    body: {
+      userId: Joi.number()
+    },
+    type: 'json'
+  },
+  handler: [loginCheck, userRelationCtl.unFollow]
+})
+
 module.exports = profile

@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-03 15:49:41
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 16:09:54
+ * @Last Modified time: 2020-06-03 16:35:50
  */
 
 const BaseController = require('../controllers/baseController')
@@ -30,6 +30,22 @@ class UserRelation extends BaseController {
     } catch (e) {
       this.errorHandler(e)
       ctx.body = new ErrorModel(errnoInfo.addFollowerFailInfo)
+    }
+  }
+
+  async unFollow (ctx) {
+    try {
+      const { id: myUserId } = ctx.session.userInfo
+      const { userId: curUserId } = ctx.request.body
+      const res = await service.unFollow({ userId: myUserId, followerId: curUserId })
+      if (res >= 1) {
+        ctx.body = new SuccessModel()
+      } else {
+        ctx.body = new ErrorModel(errnoInfo.deleteFollowerFailInfo)
+      }
+    } catch (e) {
+      this.errorHandler(e)
+      ctx.body = new ErrorModel(errnoInfo.deleteFollowerFailInfo)
     }
   }
 }

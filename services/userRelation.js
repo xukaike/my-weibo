@@ -5,4 +5,9 @@ async function addFollwer ({ userId, followerId }) {
   return res.affectedRows
 }
 
-module.exports = { addFollwer }
+async function unFollow ({ userId, followerId }) {
+  const res = await userRelationModel.delete({ userId, followerId })
+  return res.affectedRows
+}
+
+module.exports = { addFollwer, unFollow }
