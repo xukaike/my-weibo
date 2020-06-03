@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-02 16:20:40
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 14:09:52
+ * @Last Modified time: 2020-06-03 18:20:28
  */
 const BaseController = require('./baseController')
 const service = require('../services/blog')
@@ -40,10 +40,10 @@ class BlogCtl extends BaseController {
    * @param {string} userName
    * @param {number} pageIndex
    */
-  async getProfileBlogList (userName, pageIndex = 0) {
+  async getProfileBlogList (userId, pageIndex = 0) {
     try {
       const result = await service.getBlogListByUser({
-        userName,
+        userId,
         pageIndex,
         pageSize: PAGE_SIZE
       })
@@ -80,6 +80,33 @@ class BlogCtl extends BaseController {
           count: result.count
         }
       )
+    } catch (e) {
+      this.errorHandler(e)
+    }
+  }
+
+  /**
+   * 获取首页微博
+   * @param {string} userName
+   * @param {number} pageIndex
+   */
+  async getHomeBlogList (userId, pageIndex = 0) {
+    try {
+      const result = await service.getHomeBlogList({
+        userId,
+        pageIndex,
+        pageSize: PAGE_SIZE
+      })
+      const blogList = result.blogList
+
+      // 拼接返回数据
+      return new SuccessModel({
+        isEmpty: blogList.length === 0,
+        blogList,
+        pageSize: PAGE_SIZE,
+        pageIndex,
+        count: result.count
+      })
     } catch (e) {
       this.errorHandler(e)
     }

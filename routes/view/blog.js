@@ -7,7 +7,42 @@ const { getFans, getFollowers } = require('../../controllers/userRelation')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
-  await ctx.render('index', {})
+  const userInfo = ctx.session.userInfo
+  const { id: userId } = userInfo
+
+  // 获取第一页数据
+  const result = await blogCtl.getHomeBlogList(userId)
+  const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
+
+  // 获取粉丝
+  let res = await getFans(userId)
+  const { count: fansCount, userList: fansList } = res.data
+
+  // 获取关注人列表
+  res = await getFollowers(userId)
+  const { count: followersCount, userList: followersList } = res.data
+
+  await ctx.render('index', {
+    userData: {
+      userInfo,
+      fansData: {
+        count: fansCount,
+        list: fansList
+      },
+      followersData: {
+        count: followersCount,
+        list: followersList
+      },
+      atCount: 0
+    },
+    blogData: {
+      isEmpty,
+      blogList,
+      pageSize,
+      pageIndex,
+      count
+    }
+  })
 })
 
 // 个人主页
@@ -34,7 +69,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   formatUsers(curUserInfo)
 
   // 获取微博
-  const result = await blogCtl.getProfileBlogList(curUserName, 0)
+  const result = await blogCtl.getProfileBlogList(curUserInfo.id, 0)
   const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
 
   // 获取粉丝
