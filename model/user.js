@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 14:08:15
+ * @Last Modified time: 2020-06-02 17:28:23
  */
 const { query } = require('./db')
 
@@ -13,7 +13,8 @@ class UserModel {
   }
 
   getByName (userName, password) {
-    let sql = `SELECT * FROM ${this.userTable}
+    let sql = `SELECT ${this.userTable}.id, ${this.userTable}.user_name, ${this.userTable}.nick_name, ${this.userTable}.gender, ${this.userTable}.city, ${this.userTable}.avatar
+     FROM ${this.userTable}
     WHERE user_name = ?`
     if (password) sql += `AND password = '${password}'`
     return query(sql, userName)

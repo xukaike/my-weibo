@@ -1,5 +1,5 @@
 const { userModel } = require('../model/index')
-const { formatUsers } = require('../utils/formatUser')
+const { formatUsers } = require('../utils/format')
 const md5 = require('../utils/cryp')
 
 /**

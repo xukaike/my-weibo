@@ -73,5 +73,8 @@ module.exports = {
     }
   },
   CRYPTO_SECRET_KEY: 'Shbg_u2n98zK',
-  SESSION_SECRET_KEY: 'uhng7$aon_'
+  SESSION_SECRET_KEY: 'uhng7$aon_',
+  PAGE_SIZE: 5,
+  // 正则表达式，匹配 '@昵称 - userName'
+  REG_AT: /@(.+?)\s-\s(\w+?)\b/g
 }

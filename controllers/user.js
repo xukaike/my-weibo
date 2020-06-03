@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 16:26:40
+ * @Last Modified time: 2020-06-02 17:06:47
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -30,7 +30,7 @@ class UserCtl extends BaseController {
       if (!userInfo) {
         ctx.body = new ErrorModel(errnoInfo.registerUserNameNotExistInfo)
       } else {
-        ctx.body = new SuccessModel()
+        ctx.body = new SuccessModel(userInfo)
       }
     } catch (e) {
       this.errorHandler(e)

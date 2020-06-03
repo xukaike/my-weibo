@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 11:09:54
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 15:26:20
+ * @Last Modified time: 2020-06-03 10:56:04
  */
 'use strict'
 
@@ -26,7 +26,7 @@ const blog = `CREATE TABLE IF NOT EXISTS blog(
   user_id INT UNSIGNED NOT NULL COMMENT '用户id',
   content TEXT COMMENT '微博内容',
   image VARCHAR(255) COMMENT '图片',
-  craeted_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  created_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY(id)
 )`
