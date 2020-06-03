@@ -2,6 +2,7 @@ const router = require('koa-joi-router')()
 const { loginRedirect } = require('../../middleware/loginCheck')
 const userSevices = require('../../services/user')
 const blogCtl = require('../../controllers/blog')
+const { formatUsers } = require('../../utils/format')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -29,6 +30,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
     }
     curUserInfo = existResult
   }
+  formatUsers(curUserInfo)
 
   const result = await blogCtl.getProfileBlogList(curUserName, 0)
   const { isEmpty, blogList, pageSize, pageIndex, count } = result.data

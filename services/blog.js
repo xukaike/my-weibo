@@ -7,9 +7,10 @@ async function create ({ userId, content, image }) {
 }
 
 async function getBlogListByUser ({ userName, pageIndex, pageSize }) {
-  const res = await blogModel.getBlogListByUser({ userName, pageIndex, pageSize })
+  let res = await blogModel.getBlogListByUser({ userName, pageIndex, pageSize })
   const blogList = formatBlogs(res)
-  const count = blogList.length
+  res = await blogModel.getBlogListByUser({ userName, count: true })
+  const { count } = res[0]
   return {
     blogList, count
   }

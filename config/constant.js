@@ -1,5 +1,5 @@
 module.exports = {
-  defaultAvatar: 'https://dwz.cn/rnTnftZs',
+  defaultAvatar: '/default.jpg',
   errnoInfo: {
     // 用户名已存在
     registerUserNameExistInfo: {

@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:52:19
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 10:54:31
+ * @Last Modified time: 2020-06-03 13:42:05
  */
 
 const { defaultAvatar, REG_AT } = require('../config/constant')
@@ -12,6 +12,7 @@ function _formatUser (obj) {
   if (!obj.avatar) {
     obj.avatar = defaultAvatar
   }
+  obj.userName = obj.user_name
   obj.nickName = obj.nick_name
   obj.picture = obj.avatar
   return obj
@@ -35,7 +36,7 @@ function formatUsers (list) {
 
 function _formatBlog (obj) {
   obj.user = {
-    picture: obj.avatar,
+    picture: obj.avatar || defaultAvatar,
     nickName: obj.nick_name,
     userName: obj.user_name
   }
