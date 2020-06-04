@@ -3,7 +3,7 @@ const { formatBlogs } = require('../utils/format')
 
 async function create ({ userId, content, image }) {
   const res = await blogModel.create({ userId, content, image })
-  return res.affectedRows
+  return res
 }
 
 async function getBlogListByUser ({ userId, pageIndex, pageSize }) {

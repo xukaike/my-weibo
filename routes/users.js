@@ -3,6 +3,7 @@ const Joi = router.Joi
 const user = router()
 const ctl = require('../controllers/user')
 const { loginCheck } = require('../middleware/loginCheck')
+const relationCtl = require('../controllers/userRelation')
 
 user.prefix('/api/user')
 
@@ -76,6 +77,20 @@ user.route({
   method: 'post',
   path: '/logout',
   handler: [loginCheck, ctl.logout]
+})
+
+user.route({
+  method: 'get',
+  path: '/getAtList',
+  handler: [loginCheck, async (ctx, next) => {
+    const { id: userId } = ctx.session.userInfo
+    const res = await relationCtl.getFollowers(userId)
+    const { userList } = res.data
+    const list = userList.map(user => {
+      return `${user.nickName} - ${user.userName}`
+    })
+    ctx.body = list
+  }]
 })
 
 module.exports = user

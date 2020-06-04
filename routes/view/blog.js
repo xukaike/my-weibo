@@ -4,6 +4,7 @@ const userSevices = require('../../services/user')
 const blogCtl = require('../../controllers/blog')
 const { formatUsers } = require('../../utils/format')
 const { getFans, getFollowers } = require('../../controllers/userRelation')
+const { getAtMeCount, getAtMeBlogList, markAsRead } = require('../../controllers/atRelation')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -22,6 +23,10 @@ router.get('/', loginRedirect, async (ctx, next) => {
   res = await getFollowers(userId)
   const { count: followersCount, userList: followersList } = res.data
 
+  // 获取@数量
+  const atCountRes = await getAtMeCount(userId)
+  const { count: atCount } = atCountRes.data
+
   await ctx.render('index', {
     userData: {
       userInfo,
@@ -33,7 +38,7 @@ router.get('/', loginRedirect, async (ctx, next) => {
         count: followersCount,
         list: followersList
       },
-      atCount: 0
+      atCount
     },
     blogData: {
       isEmpty,
@@ -85,6 +90,10 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
     return item.userName === myUserName
   })
 
+  // 获取@数量
+  const atCountRes = await getAtMeCount(myUserInfo.id)
+  const { count: atCount } = atCountRes.data
+
   await ctx.render('profile', {
     blogData: {
       isEmpty,
@@ -105,7 +114,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
         list: followersList
       },
       amIFollowed,
-      atCount: 0
+      atCount
     }
   })
 })
@@ -123,6 +132,34 @@ router.get('/square', loginRedirect, async (ctx, next) => {
       count
     }
   })
+})
+
+// @我
+router.get('/at-me', loginRedirect, async (ctx, next) => {
+  const { id: userId } = ctx.session.userInfo
+
+  // 获取@数量
+  const atCountRes = await getAtMeCount(userId)
+  const { count: atCount } = atCountRes.data
+  // 获取@我的微博
+  const blogRes = await getAtMeBlogList({ userId })
+  const { isEmpty, blogList, pageSize, pageIndex, count } = blogRes.data
+
+  await ctx.render('atMe', {
+    atCount,
+    blogData: {
+      isEmpty,
+      blogList,
+      pageSize,
+      pageIndex,
+      count
+    }
+  })
+
+  // 标记为已读
+  if (atCount > 0) {
+    await markAsRead(userId)
+  }
 })
 
 module.exports = router

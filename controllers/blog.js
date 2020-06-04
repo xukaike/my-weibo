@@ -2,14 +2,16 @@
  * @Author: xukai
  * @Date: 2020-06-02 16:20:40
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 18:20:28
+ * @Last Modified time: 2020-06-04 11:27:01
  */
 const BaseController = require('./baseController')
 const service = require('../services/blog')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
-const { errnoInfo, PAGE_SIZE } = require('../config/constant')
+const { errnoInfo, PAGE_SIZE, REG_AT } = require('../config/constant')
 const xss = require('xss')
 const { getSquareCache } = require('../cache/square')
+const { getUserInfo } = require('../services/user')
+const { createRelation } = require('../services/atRelation')
 
 class BlogCtl extends BaseController {
   constructor () {
@@ -22,11 +24,32 @@ class BlogCtl extends BaseController {
 
   async create (ctx) {
     try {
-      const { content, image } = ctx.request.body
+      let { content, image } = ctx.request.body
       const { id: userId } = ctx.session.userInfo
+
+      // 获取@关系
+      const atUserNameList = []
+      content = content.replace(REG_AT, (matchSrt, nickName, userName) => {
+        atUserNameList.push(userName)
+        return matchSrt
+      })
+
+      // 获取用户信息
+      const atUserList = await Promise.all(
+        atUserNameList.map(user => { return getUserInfo(user) })
+      )
+      const atUserIdList = atUserList.map(user => user.id)
+
+      // 创建微博
       const res = await service.create({ userId, content: xss(content), image })
-      if (res >= 1) ctx.body = new SuccessModel()
-      else {
+      if (res.affectedRows >= 1) {
+        ctx.body = new SuccessModel()
+
+        // 创建at关系
+        await Promise.all(atUserIdList.map(id => {
+          createRelation(id, res.insertId)
+        }))
+      } else {
         ctx.body = new ErrorModel(errnoInfo.createBlogFailInfo)
       }
     } catch (e) {

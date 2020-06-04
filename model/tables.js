@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 11:09:54
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 16:16:25
+ * @Last Modified time: 2020-06-04 11:15:40
  */
 'use strict'
 
@@ -45,7 +45,19 @@ const userRelation = `CREATE TABLE IF NOT EXISTS user_relation(
   PRIMARY KEY(id)
 )`
 
-const tables = [user, blog, userRelation]
+const atRelation = `CREATE TABLE IF NOT EXISTS at_relation(
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL COMMENT '用户id',
+  blog_id INT UNSIGNED NOT NULL COMMENT '微博id',
+  is_read TINYINT UNSIGNED NOT NULL DEFAULT 0 COMMENT '0:未读,1:已读',
+  created_at datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  updated_at datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  KEY (user_id),
+  KEY (blog_id),
+  PRIMARY KEY(id)
+)`
+
+const tables = [user, blog, userRelation, atRelation]
 
 const createTable = tables.map(table => {
   return query(table)
