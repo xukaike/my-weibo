@@ -6,7 +6,7 @@
     "start": "node bin/www",
     "dev": "./node_modules/.bin/nodemon bin/www",
     "prd": "pm2 start bin/www",
-    "test": "NODE_ENV=test mocha test/*"
+    "test": "set NODE_ENV=test && mocha test/*"
   },
   "dependencies": {
     "assert": "^2.0.0",
