@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 18:52:20
+ * @Last Modified time: 2020-06-04 09:57:45
  */
 const { query } = require('./db')
 
@@ -28,7 +28,8 @@ class UserRelation {
     FROM ${this.userRelationTable} LEFT JOIN ${this.userTable}
     ON ${this.userRelationTable}.follower_id = ${this.userTable}.id
     WHERE ${this.userRelationTable}.user_id = ?
-    AND ${this.userTable}.id != ?`
+    AND ${this.userTable}.id != ?
+    ORDER BY ${this.userRelationTable}.id DESC`
     return query(sql, [userId, userId])
   }
 
@@ -37,7 +38,8 @@ class UserRelation {
     FROM ${this.userRelationTable} LEFT JOIN ${this.userTable}
     ON ${this.userRelationTable}.user_id = ${this.userTable}.id
     WHERE ${this.userRelationTable}.follower_id = ?
-    AND ${this.userTable}.id != ?`
+    AND ${this.userTable}.id != ?
+    ORDER BY ${this.userRelationTable}.id DESC`
     return query(sql, [followerId, followerId])
   }
 }
