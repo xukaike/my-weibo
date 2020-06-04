@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 18:39:29
+ * @Last Modified time: 2020-06-04 15:51:25
  */
 const BaseController = require('./baseController')
 const service = require('../services/user')
@@ -93,6 +93,8 @@ class UserCtl extends BaseController {
       const userName = ctx.session.userInfo.user_name
       const { nickName, city, picture: avatar } = ctx.request.body
       const res = await service.changeInfo({ userName, nickName, city, avatar })
+      const userInfo = await service.getUserInfo(userName)
+      ctx.session.userInfo = userInfo
       if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
       else {
         ctx.body = new ErrorModel(errnoInfo.changeInfoFailInfo)
