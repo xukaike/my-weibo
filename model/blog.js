@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:04:24
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 18:48:45
+ * @Last Modified time: 2020-06-04 14:40:50
  */
 const { query } = require('./db')
 
@@ -40,6 +40,7 @@ class BlogModel {
       ON ${this.blogTable}.user_id = ${this.userTable}.id `
       if (userId) {
         sql += `WHERE ${this.userTable}.id = ? `
+        sql += `ORDER BY ${this.blogTable}.id DESC`
         return query(sql, [userId, pageIndex * pageSize, pageSize])
       }
       sql += `ORDER BY ${this.blogTable}.id DESC
@@ -52,7 +53,7 @@ class BlogModel {
   getHomeBlogList ({ userId, pageIndex = 0, pageSize = 10, count = false }) {
     let sql = ''
     if (count) {
-      sql = `SELECT COUNT(${this.blogTable}.id)
+      sql = `SELECT COUNT(${this.blogTable}.id) AS count
       FROM ${this.blogTable} 
       LEFT JOIN ${this.userRelationTable} 
       ON ${this.blogTable}.user_id = ${this.userRelationTable}.user_id 

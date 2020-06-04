@@ -3,6 +3,7 @@ const Joi = router.Joi
 const blog = router()
 const { loginCheck } = require('../middleware/loginCheck')
 const ctl = require('../controllers/blog')
+const { getBlogListStr } = require('../utils/blog')
 
 blog.prefix('/api/blog')
 
@@ -18,6 +19,18 @@ blog.route({
     type: 'json'
   },
   handler: [loginCheck, ctl.create]
+})
+
+// 加载更多
+blog.get('/loadMore/:pageIndex', loginCheck, async (ctx, next) => {
+  let { pageIndex } = ctx.params
+  pageIndex = parseInt(pageIndex) // 转换 number 类型
+  const { id: userId } = ctx.session.userInfo
+  const result = await ctl.getHomeBlogList(userId, pageIndex)
+  // 渲染模板
+  result.data.blogListTpl = getBlogListStr(result.data.blogList)
+
+  ctx.body = result
 })
 
 module.exports = blog

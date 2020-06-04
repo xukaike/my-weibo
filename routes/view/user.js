@@ -1,5 +1,6 @@
 const router = require('koa-joi-router')()
 const { loginRedirect } = require('../../middleware/loginCheck')
+const { formatUsers } = require('../../utils/format')
 
 function getLoginInfo (ctx) {
   let data = {
@@ -24,7 +25,8 @@ router.get('/register', async (ctx, next) => {
 })
 
 router.get('/setting', loginRedirect, async (ctx, next) => {
-  await ctx.render('setting', ctx.session.userInfo)
+  const userInfo = formatUsers(ctx.session.userInfo)
+  await ctx.render('setting', userInfo)
 })
 
 module.exports = router
