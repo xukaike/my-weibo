@@ -2,10 +2,10 @@
  * @Author: xukai
  * @Date: 2020-06-02 10:34:37
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-02 11:26:46
+ * @Last Modified time: 2020-06-04 15:38:21
  */
 
-const { ErrorModel, SuccessModel } = require('../model/ResModel')
+const { ErrorModel, SuccessModel } = require('../model/resModel')
 const { uploadFileSizeFailInfo } = require('../config/constant').errnoInfo
 const fse = require('fs-extra')
 const path = require('path')
