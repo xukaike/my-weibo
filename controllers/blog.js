@@ -2,7 +2,7 @@
  * @Author: xukai
  * @Date: 2020-06-02 16:20:40
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-05 14:00:41
+ * @Last Modified time: 2020-06-05 16:35:20
  */
 const BaseController = require('./baseController')
 const { BlogService, UserService, AtRelationService } = require('../services/index')
@@ -10,6 +10,7 @@ const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { errnoInfo, PAGE_SIZE, REG_AT } = require('../config/constant')
 const xss = require('xss')
 const { getSquareCache } = require('../cache/square')
+const { infoLog, errLog } = require('../libs/logger')
 
 class BlogCtl extends BaseController {
   constructor () {
@@ -18,12 +19,15 @@ class BlogCtl extends BaseController {
     this.create = this.create.bind(this)
     this.getProfileBlogList = this.getProfileBlogList.bind(this)
     this.getSquareBlogList = this.getSquareBlogList.bind(this)
+    this.getHomeBlogList = this.getHomeBlogList.bind(this)
   }
 
   async create (ctx) {
     try {
       let { content, image } = ctx.request.body
       const { id: userId } = ctx.session.userInfo
+
+      infoLog(this.name, this.create.name, { userId, content, image })
 
       // 获取@关系
       const atUserNameList = []
@@ -51,6 +55,7 @@ class BlogCtl extends BaseController {
         ctx.body = new ErrorModel(errnoInfo.createBlogFailInfo)
       }
     } catch (e) {
+      errLog(this.name, this.create.name, ctx)
       this.errorHandler(e)
       ctx.body = new ErrorModel(errnoInfo.createBlogFailInfo)
     }
@@ -63,6 +68,8 @@ class BlogCtl extends BaseController {
    */
   async getProfileBlogList (userId, pageIndex = 0) {
     try {
+      infoLog(this.name, this.getProfileBlogList.name, { userId, pageIndex })
+
       const result = await BlogService.getBlogListByUser({
         userId,
         pageIndex,
@@ -79,6 +86,7 @@ class BlogCtl extends BaseController {
         count: result.count
       })
     } catch (e) {
+      errLog(this.name, this.getProfileBlogList.name, { userId, pageIndex, error: e })
       this.errorHandler(e)
     }
   }
@@ -89,6 +97,8 @@ class BlogCtl extends BaseController {
    */
   async getSquareBlogList (pageIndex = 0) {
     try {
+      infoLog(this.name, this.getSquareBlogList.name, { pageIndex })
+
       const result = await getSquareCache(pageIndex, PAGE_SIZE)
       const blogList = result.blogList
 
@@ -102,6 +112,7 @@ class BlogCtl extends BaseController {
         }
       )
     } catch (e) {
+      errLog(this.name, this.getSquareBlogList.name, { pageIndex, error: e })
       this.errorHandler(e)
     }
   }
@@ -113,6 +124,7 @@ class BlogCtl extends BaseController {
    */
   async getHomeBlogList (userId, pageIndex = 0) {
     try {
+      infoLog(this.name, this.getHomeBlogList.name, { userId, pageIndex })
       const result = await BlogService.getHomeBlogList({
         userId,
         pageIndex,
@@ -129,6 +141,7 @@ class BlogCtl extends BaseController {
         count: result.count
       })
     } catch (e) {
+      errLog(this.name, this.getHomeBlogList.name, { userId, error: e })
       this.errorHandler(e)
     }
   }
