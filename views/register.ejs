@@ -27,7 +27,8 @@
         &nbsp;
         <a href="/login">已有账号，返回登录>></a>
     </form>
-
+    
+    <script src="http://cdn.bootcss.com/blueimp-md5/1.1.0/js/md5.min.js"></script>
     <script>
         $(function() {
             var $inputUserName = $('#input-username')
@@ -107,7 +108,7 @@
                 // 提交数据
                 ajax.post('/api/user/register', {
                     userName,
-                    password,
+                    password:md5(password),
                     gender
                 }, function(err, data) {
                     if (err) {
