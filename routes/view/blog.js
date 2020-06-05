@@ -1,10 +1,10 @@
 const router = require('koa-joi-router')()
 const { loginRedirect } = require('../../middleware/loginCheck')
-const userSevices = require('../../services/user')
+const { UserService } = require('../../services/index')
 const blogCtl = require('../../controllers/blog')
 const { formatUsers } = require('../../utils/format')
-const { getFans, getFollowers } = require('../../controllers/userRelation')
-const { getAtMeCount, getAtMeBlogList, markAsRead } = require('../../controllers/atRelation')
+const userRelationCtl = require('../../controllers/userRelation')
+const atRelationCtl = require('../../controllers/atRelation')
 
 // 首页
 router.get('/', loginRedirect, async (ctx, next) => {
@@ -16,15 +16,15 @@ router.get('/', loginRedirect, async (ctx, next) => {
   const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
 
   // 获取粉丝
-  let res = await getFans(userId)
+  let res = await userRelationCtl.getFans(userId)
   const { count: fansCount, userList: fansList } = res.data
 
   // 获取关注人列表
-  res = await getFollowers(userId)
+  res = await userRelationCtl.getFollowers(userId)
   const { count: followersCount, userList: followersList } = res.data
 
   // 获取@数量
-  const atCountRes = await getAtMeCount(userId)
+  const atCountRes = await atRelationCtl.getAtMeCount(userId)
   const { count: atCount } = atCountRes.data
 
   await ctx.render('index', {
@@ -65,7 +65,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   if (isMe) {
     curUserInfo = myUserInfo
   } else {
-    const existResult = await userSevices.getUserInfo(curUserName)
+    const existResult = await UserService.getUserInfo(curUserName)
     if (!existResult) {
       return
     }
@@ -78,11 +78,11 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   const { isEmpty, blogList, pageSize, pageIndex, count } = result.data
 
   // 获取粉丝
-  let res = await getFans(curUserInfo.id)
+  let res = await userRelationCtl.getFans(curUserInfo.id)
   const { count: fansCount, userList: fansList } = res.data
 
   // 获取关注人列表
-  res = await getFollowers(curUserInfo.id)
+  res = await userRelationCtl.getFollowers(curUserInfo.id)
   const { count: followersCount, userList: followersList } = res.data
 
   // 我是否关注了此人？
@@ -91,7 +91,7 @@ router.get('/profile/:userName', loginRedirect, async (ctx, next) => {
   })
 
   // 获取@数量
-  const atCountRes = await getAtMeCount(myUserInfo.id)
+  const atCountRes = await atRelationCtl.getAtMeCount(myUserInfo.id)
   const { count: atCount } = atCountRes.data
 
   await ctx.render('profile', {
@@ -139,10 +139,10 @@ router.get('/at-me', loginRedirect, async (ctx, next) => {
   const { id: userId } = ctx.session.userInfo
 
   // 获取@数量
-  const atCountRes = await getAtMeCount(userId)
+  const atCountRes = await atRelationCtl.getAtMeCount(userId)
   const { count: atCount } = atCountRes.data
   // 获取@我的微博
-  const blogRes = await getAtMeBlogList({ userId })
+  const blogRes = await atRelationCtl.getAtMeBlogList({ userId })
   const { isEmpty, blogList, pageSize, pageIndex, count } = blogRes.data
 
   await ctx.render('atMe', {
@@ -158,7 +158,7 @@ router.get('/at-me', loginRedirect, async (ctx, next) => {
 
   // 标记为已读
   if (atCount > 0) {
-    await markAsRead(userId)
+    await atRelationCtl.markAsRead(userId)
   }
 })
 

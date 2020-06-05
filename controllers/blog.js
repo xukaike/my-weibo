@@ -2,16 +2,14 @@
  * @Author: xukai
  * @Date: 2020-06-02 16:20:40
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-04 11:27:01
+ * @Last Modified time: 2020-06-05 14:00:41
  */
 const BaseController = require('./baseController')
-const service = require('../services/blog')
+const { BlogService, UserService, AtRelationService } = require('../services/index')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { errnoInfo, PAGE_SIZE, REG_AT } = require('../config/constant')
 const xss = require('xss')
 const { getSquareCache } = require('../cache/square')
-const { getUserInfo } = require('../services/user')
-const { createRelation } = require('../services/atRelation')
 
 class BlogCtl extends BaseController {
   constructor () {
@@ -36,18 +34,18 @@ class BlogCtl extends BaseController {
 
       // 获取用户信息
       const atUserList = await Promise.all(
-        atUserNameList.map(user => { return getUserInfo(user) })
+        atUserNameList.map(user => { return UserService.getUserInfo(user) })
       )
       const atUserIdList = atUserList.map(user => user.id)
 
       // 创建微博
-      const res = await service.create({ userId, content: xss(content), image })
+      const res = await BlogService.create({ userId, content: xss(content), image })
       if (res.affectedRows >= 1) {
         ctx.body = new SuccessModel()
 
         // 创建at关系
         await Promise.all(atUserIdList.map(id => {
-          createRelation(id, res.insertId)
+          AtRelationService.createRelation(id, res.insertId)
         }))
       } else {
         ctx.body = new ErrorModel(errnoInfo.createBlogFailInfo)
@@ -65,7 +63,7 @@ class BlogCtl extends BaseController {
    */
   async getProfileBlogList (userId, pageIndex = 0) {
     try {
-      const result = await service.getBlogListByUser({
+      const result = await BlogService.getBlogListByUser({
         userId,
         pageIndex,
         pageSize: PAGE_SIZE
@@ -115,7 +113,7 @@ class BlogCtl extends BaseController {
    */
   async getHomeBlogList (userId, pageIndex = 0) {
     try {
-      const result = await service.getHomeBlogList({
+      const result = await BlogService.getHomeBlogList({
         userId,
         pageIndex,
         pageSize: PAGE_SIZE

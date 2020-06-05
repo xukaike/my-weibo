@@ -1,6 +1,6 @@
 const profile = require('koa-joi-router')()
 const { loginCheck } = require('../middleware/loginCheck')
-const { getSquareBlogList } = require('../controllers/blog')
+const blogCtl = require('../controllers/blog')
 const { getBlogListStr } = require('../utils/blog')
 
 profile.prefix('/api/square')
@@ -8,7 +8,7 @@ profile.prefix('/api/square')
 profile.get('/loadMore/:pageIndex', loginCheck, async (ctx, next) => {
   let { pageIndex } = ctx.params
   pageIndex = parseInt(pageIndex)
-  const res = await getSquareBlogList(pageIndex)
+  const res = await blogCtl.getSquareBlogList(pageIndex)
 
   res.data.blogListTpl = getBlogListStr(res.data.blogList)
 

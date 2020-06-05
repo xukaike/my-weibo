@@ -2,11 +2,11 @@
  * @Author: xukai
  * @Date: 2020-06-02 16:20:40
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-04 14:14:30
+ * @Last Modified time: 2020-06-05 13:57:29
  */
 const BaseController = require('./baseController')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
-const { getAtMeBlogList, getAtMeCount, markAsRead } = require('../services/atRelation')
+const { AtRelationService } = require('../services/index')
 const { PAGE_SIZE } = require('../config/constant')
 
 class AtRelationCtl extends BaseController {
@@ -19,7 +19,7 @@ class AtRelationCtl extends BaseController {
 
   async getAtMeCount (userId) {
     try {
-      const res = await getAtMeCount(userId)
+      const res = await AtRelationService.getAtMeCount(userId)
       const { count } = res
       return new SuccessModel({ count })
     } catch (e) {
@@ -29,7 +29,7 @@ class AtRelationCtl extends BaseController {
 
   async getAtMeBlogList ({ userId, pageIndex = 0 }) {
     try {
-      const result = await getAtMeBlogList({
+      const result = await AtRelationService.getAtMeBlogList({
         userId,
         pageIndex,
         pageSize: PAGE_SIZE
@@ -51,7 +51,7 @@ class AtRelationCtl extends BaseController {
 
   async markAsRead (userId) {
     try {
-      const res = await markAsRead(userId)
+      const res = await AtRelationService.markAsRead(userId)
       if (res > 1) return new SuccessModel()
     } catch (e) {
       this.errorHandler(e)

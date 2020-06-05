@@ -1,7 +1,7 @@
 const router = require('koa-joi-router')
 const Joi = router.Joi
 const user = router()
-const ctl = require('../controllers/user')
+const userCtl = require('../controllers/user')
 const { loginCheck } = require('../middleware/loginCheck')
 const relationCtl = require('../controllers/userRelation')
 
@@ -16,7 +16,7 @@ user.route({
     },
     type: 'json'
   },
-  handler: ctl.isExist
+  handler: userCtl.isExist
 })
 
 user.route({
@@ -30,7 +30,7 @@ user.route({
     },
     type: 'json'
   },
-  handler: ctl.register
+  handler: userCtl.register
 })
 
 user.route({
@@ -43,7 +43,7 @@ user.route({
     },
     type: 'json'
   },
-  handler: ctl.login
+  handler: userCtl.login
 })
 
 user.route({
@@ -57,7 +57,7 @@ user.route({
     },
     type: 'json'
   },
-  handler: [loginCheck, ctl.changeInfo]
+  handler: [loginCheck, userCtl.changeInfo]
 })
 
 user.route({
@@ -70,13 +70,13 @@ user.route({
     },
     type: 'json'
   },
-  handler: [loginCheck, ctl.changePassword]
+  handler: [loginCheck, userCtl.changePassword]
 })
 
 user.route({
   method: 'post',
   path: '/logout',
-  handler: [loginCheck, ctl.logout]
+  handler: [loginCheck, userCtl.logout]
 })
 
 user.route({

@@ -1,5 +1,7 @@
 module.exports = {
+  // 默认头像
   defaultAvatar: '/default.jpg',
+  // 错误信息
   errnoInfo: {
     // 用户名已存在
     registerUserNameExistInfo: {
@@ -72,11 +74,21 @@ module.exports = {
       message: '删除微博失败，请重试'
     }
   },
+  // 加密key
   CRYPTO_SECRET_KEY: 'Shbg_u2n98zK',
+  // session加密
   SESSION_SECRET_KEY: 'uhng7$aon_',
   PAGE_SIZE: 5,
   // 正则表达式，匹配 '@昵称 - userName'
   REG_AT: /@(.+?)\s-\s(\w+?)\b/g,
+  // 微博广场数据缓存key
   SQUARE_KEY_PREFIX: 'weibo:square:',
-  SQUARE_CACHE_TIMEOUT: 60// 秒
+  // 微博广场缓存时间
+  SQUARE_CACHE_TIMEOUT: 60, // 秒
+  // 错误日志
+  ERROR_LOG_NAME: './logs/error.log',
+  // 日志
+  APP_LOG_NAME: './logs/app-%DATE%.log',
+  // 日志最大保存天数
+  SAVE_DAYS: '7d'
 }

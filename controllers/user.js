@@ -2,13 +2,12 @@
  * @Author: xukai
  * @Date: 2020-06-01 16:03:59
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-04 15:51:25
+ * @Last Modified time: 2020-06-05 14:01:58
  */
 const BaseController = require('./baseController')
-const service = require('../services/user')
+const { UserService, UserRelationService } = require('../services/index')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { errnoInfo } = require('../config/constant')
-const { addFollwer } = require('../services/userRelation')
 
 class UserCtl extends BaseController {
   constructor () {
@@ -27,7 +26,7 @@ class UserCtl extends BaseController {
   async isExist (ctx) {
     try {
       const { userName } = ctx.request.body
-      const userInfo = await service.getUserInfo(userName)
+      const userInfo = await UserService.getUserInfo(userName)
       if (!userInfo) {
         ctx.body = new ErrorModel(errnoInfo.registerUserNameNotExistInfo)
       } else {
@@ -45,17 +44,17 @@ class UserCtl extends BaseController {
   async register (ctx) {
     try {
       const { userName, password, gender } = ctx.request.body
-      const userInfo = await service.getUserInfo(userName)
+      const userInfo = await UserService.getUserInfo(userName)
       if (userInfo) {
         ctx.body = new ErrorModel(errnoInfo.registerUserNameExistInfo)
       } else {
-        const res = await service.createUser({
+        const res = await UserService.createUser({
           userName,
           password,
           gender,
           nickName: userName
         })
-        await addFollwer({ userId: res.id, followerId: res.id })
+        await UserRelationService.addFollwer({ userId: res.id, followerId: res.id })
         ctx.body = new SuccessModel(res)
       }
     } catch (e) {
@@ -71,7 +70,7 @@ class UserCtl extends BaseController {
   async login (ctx) {
     try {
       const { userName, password } = ctx.request.body
-      const userInfo = await service.getUserInfo(userName, password)
+      const userInfo = await UserService.getUserInfo(userName, password)
       if (!userInfo) {
         ctx.body = new ErrorModel(errnoInfo.loginFailInfo)
       } else {
@@ -92,8 +91,8 @@ class UserCtl extends BaseController {
     try {
       const userName = ctx.session.userInfo.user_name
       const { nickName, city, picture: avatar } = ctx.request.body
-      const res = await service.changeInfo({ userName, nickName, city, avatar })
-      const userInfo = await service.getUserInfo(userName)
+      const res = await UserService.changeInfo({ userName, nickName, city, avatar })
+      const userInfo = await UserService.getUserInfo(userName)
       ctx.session.userInfo = userInfo
       if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
       else {
@@ -113,7 +112,7 @@ class UserCtl extends BaseController {
     try {
       const { password, newPassword } = ctx.request.body
       const userName = ctx.session.userInfo.user_name
-      const res = await service.changePassword({ userName, password, newPassword })
+      const res = await UserService.changePassword({ userName, password, newPassword })
       if (res >= 1) ctx.body = new SuccessModel({ message: '修改成功' })
       else {
         ctx.body = new ErrorModel(errnoInfo.changePasswordFailInfo)

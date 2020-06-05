@@ -2,11 +2,11 @@
  * @Author: xukai
  * @Date: 2020-06-03 15:49:41
  * @Last Modified by: xukai
- * @Last Modified time: 2020-06-03 17:16:26
+ * @Last Modified time: 2020-06-05 14:02:21
  */
 
 const BaseController = require('../controllers/baseController')
-const service = require('../services/userRelation')
+const { UserRelationService } = require('../services/index')
 const { SuccessModel, ErrorModel } = require('../model/resModel')
 const { errnoInfo } = require('../config/constant')
 
@@ -24,7 +24,7 @@ class UserRelation extends BaseController {
     try {
       const { id: myUserId } = ctx.session.userInfo
       const { userId: curUserId } = ctx.request.body
-      const res = await service.addFollwer({ userId: myUserId, followerId: curUserId })
+      const res = await UserRelationService.addFollwer({ userId: myUserId, followerId: curUserId })
       if (res >= 1) {
         ctx.body = new SuccessModel()
       } else {
@@ -40,7 +40,7 @@ class UserRelation extends BaseController {
     try {
       const { id: myUserId } = ctx.session.userInfo
       const { userId: curUserId } = ctx.request.body
-      const res = await service.unFollow({ userId: myUserId, followerId: curUserId })
+      const res = await UserRelationService.unFollow({ userId: myUserId, followerId: curUserId })
       if (res >= 1) {
         ctx.body = new SuccessModel()
       } else {
@@ -53,7 +53,7 @@ class UserRelation extends BaseController {
   }
 
   async getFans (userId) {
-    const { count, userList } = await service.getFollowersByUser(userId)
+    const { count, userList } = await UserRelationService.getFollowersByUser(userId)
     return new SuccessModel({
       count,
       userList
@@ -61,7 +61,7 @@ class UserRelation extends BaseController {
   }
 
   async getFollowers (followerId) {
-    const { count, userList } = await service.getUsersByFollower(followerId)
+    const { count, userList } = await UserRelationService.getUsersByFollower(followerId)
     return new SuccessModel({
       count,
       userList
